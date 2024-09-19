@@ -33,7 +33,9 @@ public class UI
 
         JButton settingsButton = new JButton("Settings");
         settingsButton.setBounds(430, 10, 120, 25);
-        settingsButton.addActionListener(e -> System.out.println("Settings"));
+        settingsButton.addActionListener(e -> {System.out.println("Settings");
+        new Settings();
+        });
         panel.add(settingsButton);
 
         JButton cartButton = new JButton("Cart");
