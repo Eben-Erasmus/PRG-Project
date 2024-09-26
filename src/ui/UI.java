@@ -1,12 +1,15 @@
-import com.sun.net.httpserver.Request;
+package ui;
 
+import ui.buttons.Settings;
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class UI
 {
-    public UI()
+    String username;
+
+    public UI(String username)
     {
 //        super("My GUI");
         JFrame ui = new JFrame("My GUI");
@@ -16,6 +19,14 @@ public class UI
         JPanel panel = new JPanel();
         panel.setLayout(null);
         ui.add(panel);
+
+        JLabel userLabel = new JLabel("Logged in as: " + username);
+        userLabel.setBounds(10, 40, 165, 25);
+        panel.add(userLabel);
+
+        JLabel roleLabel = new JLabel("Normal");
+        roleLabel.setBounds(10, 60, 165, 25);
+        panel.add(roleLabel);
 
         JTextField searchBar = new JTextField(20);
         searchBar.setBounds(10, 10, 165, 25);
@@ -31,9 +42,9 @@ public class UI
         accountButton.addActionListener(e -> System.out.println("Account"));
         panel.add(accountButton);
 
-        JButton settingsButton = new JButton("Settings");
+        JButton settingsButton = new JButton("ui.buttons.Settings");
         settingsButton.setBounds(430, 10, 120, 25);
-        settingsButton.addActionListener(e -> {System.out.println("Settings");
+        settingsButton.addActionListener(e -> {System.out.println("ui.buttons.Settings");
         new Settings();
         });
         panel.add(settingsButton);

@@ -1,3 +1,7 @@
+import ui.AdminUI;
+import ui.SellerUI;
+import ui.UI;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -5,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.*;
 
 public class Login
 {
@@ -46,7 +53,7 @@ public class Login
         panel.add(success);
 
         JButton loginButton = new JButton("Login");
-        loginButton.setBounds(110, 80, 80, 25);
+        loginButton.setBounds(110, 80, 90, 25);
         loginButton.addActionListener(new ActionListener()
         {
             @Override
@@ -54,25 +61,58 @@ public class Login
             {
                 String username = usernameText.getText();
                 String password = passwordText.getText();
+                String hashedPassword = hashPassword(password);
 
-                if (username.equals("admin") && password.equals("admin"))
+                if (doesUsernameExist(username))
                 {
-//                    success.setText("Login successful");
-//                    UI ui = new UI();
-//                    ui.setVisible(true);
-                    new UI();
+                    if (hashedPassword.equals(getPassword(username)))
+                    {
+                        if (getRole(username).equals("admin")) {
+                            new AdminUI(username);
+                            frame.dispose();
+                        }
+                        else if (getRole(username).equals("seller"))
+                        {
+                            success.setText("Login successful");
+                            new SellerUI(username);
+                            frame.dispose();
+                        }
+                        else if (getRole(username).equals("customer"))
+                        {
+                            success.setText("Login successful");
+                            new UI(username);
+                            frame.dispose();
+                        }
+                        else
+                        {
+                            success.setText("Account Banned!");
+                        }
+                    }
+                    else
+                    {
+                        success.setText("Password is incorrect");
+                    }
+                }
+                else
+                {
+                    success.setText("Username does not exist");
+                }
+
+               /* if (username.equals("admin") && password.equals("admin"))
+                {
+                    new ui.UI();
                     frame.dispose();
                 }
                 else
                 {
                     success.setText("Login failed");
-                }
+                }*/
             }
         });
         panel.add(loginButton);
 
         JButton signUpButton = new JButton("Sign Up");
-        signUpButton.setBounds(110, 110, 80, 25);
+        signUpButton.setBounds(110, 110, 90, 25);
         signUpButton.addActionListener(new ActionListener()
         {
             @Override
@@ -110,40 +150,96 @@ public class Login
 
         frame.setVisible(true);
     }
-/*        final int[] count = {0};
-        JFrame frame = new JFrame("My GUI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JLabel label = new JLabel("Number of clicks: 0");
+    public boolean doesUsernameExist(String username)
+    {
+        String url = "jdbc:mysql://windhoek.erasmus.na:3306/ecommerce_database";
+        String user = "intellij";
+        String password = "";
+        boolean exists = false;
+        String query = "SELECT COUNT(*) FROM user WHERE username = ?";
 
-        JButton button = new JButton("Click me");
-        button.setBackground(Color.WHITE);
-//        button.setSize(1000, 1000);
-        button.addActionListener(new ActionListener()
+        try
         {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                count[0]++;
-                label.setText("Number of clicks: " + count[0]);
-            }
-        });
+            Connection conn = DriverManager.getConnection(url, user, password);
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
 
-
-
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
-        panel.setLayout(new GridLayout(0, 1));
-        panel.add(button);
-        panel.add(label);
-        panel.setBounds(0, 0, 300, 300);
-        panel.setSize(1000, 1000);
-
-        frame.add(panel, BorderLayout.CENTER);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setTitle("My GUI");
-        frame.pack();
-        frame.setVisible(true);
-//        frame.setSize(900, 900);
+            if (rs.next())
+                exists = rs.getInt(1) > 0;
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        return exists;
     }
-*/
+
+    public String getPassword(String username)
+    {
+        String url = "jdbc:mysql://windhoek.erasmus.na:3306/ecommerce_database";
+        String user = "intellij";
+        String password = "";
+        String query = "SELECT password FROM user WHERE username = ?";
+        String storedHashedPassword = "";
+
+        try
+        {
+            Connection conn = DriverManager.getConnection(url, user, password);
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next())
+                storedHashedPassword = rs.getString("Password");
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+        return storedHashedPassword;
+    }
+
+    public String getRole(String username)
+    {
+        String url = "jdbc:mysql://windhoek.erasmus.na:3306/ecommerce_database";
+        String user = "intellij";
+        String password = "";
+        String query = "SELECT role FROM user WHERE username = ?";
+        String role = "";
+
+        try
+        {
+            Connection conn = DriverManager.getConnection(url, user, password);
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next())
+                role = rs.getString("Role");
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+        return role;
+    }
+
+    private String hashPassword(String password)
+    {
+        try
+        {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = md.digest(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashedBytes)
+                sb.append(String.format("%02x", b));
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
