@@ -16,7 +16,7 @@ public class SellerUI
 //        super("My GUI");
         JFrame ui = new JFrame("My GUI");
         ui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ui.setSize(300, 200);
+        ui.setSize(800, 600);
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
