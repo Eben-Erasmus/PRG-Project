@@ -1,5 +1,6 @@
 package ui;
 
+import ui.buttons.Account;
 import ui.buttons.Settings;
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -37,9 +38,12 @@ public class UI
         searchButton.addActionListener(e -> System.out.println("Search: " + searchBar.getText()));
         panel.add(searchButton);
 
-        JButton accountButton = new JButton("Account");
+        JButton accountButton = new JButton("ui.buttons.Account");
         accountButton.setBounds(305, 10, 120, 25);
-        accountButton.addActionListener(e -> System.out.println("Account"));
+        accountButton.addActionListener(e ->
+        {System.out.println("ui.buttons.Account");
+            new Account();
+        });
         panel.add(accountButton);
 
         JButton settingsButton = new JButton("ui.buttons.Settings");

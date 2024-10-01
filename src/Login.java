@@ -85,7 +85,7 @@ public class Login
                         }
                         else
                         {
-                            success.setText("Account Banned!");
+                            success.setText("ui.buttons.Account Banned!");
                         }
                     }
                     else
