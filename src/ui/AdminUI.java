@@ -43,9 +43,9 @@ public class AdminUI
         accountButton.addActionListener(e -> System.out.println("ui.buttons.Account"));
         panel.add(accountButton);
 
-        JButton settingsButton = new JButton("ui.buttons.Settings");
+        JButton settingsButton = new JButton("Settings");
         settingsButton.setBounds(430, 10, 120, 25);
-        settingsButton.addActionListener(e -> {System.out.println("ui.buttons.Settings");
+        settingsButton.addActionListener(e -> {System.out.println("Settings");
             new Settings();
         });
         panel.add(settingsButton);
