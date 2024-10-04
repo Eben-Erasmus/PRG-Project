@@ -12,12 +12,14 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 public class Cart {
+    // Database connection details
+    private String url = "jdbc:mysql://windhoek.erasmus.na:3306/ecommerce_database";
+    private String user = "intellij";
+    private String password = "";
+    private boolean exists = false;
+
     // Database connection
     private Connection connect() {
-        String url = "jdbc:mysql://windhoek.erasmus.na:3306/ecommerce_database";
-        String user = "intellij";
-        String password = "";
-
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(url, user, password);
@@ -127,6 +129,24 @@ public class Cart {
         }
     }
 
+    // Clear the cart after successful checkout
+    private void clearCart() {
+        String deleteQuery = "DELETE FROM cart";
+
+        try (Connection conn = connect();
+             Statement stmt = conn.createStatement()) {
+            int rowsAffected = stmt.executeUpdate(deleteQuery);
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Cart has been cleared.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Cart is already empty.");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error clearing cart: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     // Checkout items in the cart
     private void checkout() {
         List<Object[]> items = fetchCartItems();
@@ -140,8 +160,6 @@ public class Cart {
         for (Object[] item : items) {
             total += (float) item[4] * (int) item[2]; // price * quantity
         }
-
-
 
         // Show card details and delivery address dialog
         JPanel checkoutPanel = new JPanel(new GridLayout(0, 1));
@@ -169,11 +187,14 @@ public class Cart {
 
             // Insert order into the database
             insertOrder(cardNumber, expDate, cvv, address, total);
+
+            // Clear the cart after order is confirmed
+            clearCart();
+
+            // Show confirmation message
             JOptionPane.showMessageDialog(null, "Total amount due: $" + total + "\nPurchase confirmed!\nDelivery Address: " + address);
         }
     }
-
-
 
     // Refresh the cart
     private void refreshCart(DefaultTableModel model) {
@@ -187,7 +208,6 @@ public class Cart {
             }
         }
     }
-
 
     // Constructor
     public Cart() {
@@ -243,85 +263,19 @@ public class Cart {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(refreshButton);
         buttonPanel.add(checkoutButton);
-
         panel.add(buttonPanel, BorderLayout.SOUTH);
+
         frame.add(panel);
         frame.setVisible(true);
     }
 
     // Main method
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Cart());
-    }
-
-    // Custom Button Renderer
-    class ButtonRenderer extends JButton implements TableCellRenderer {
-        public ButtonRenderer() {
-            setOpaque(true);
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setText((value == null) ? "Remove" : value.toString());
-            return this;
-        }
-    }
-
-    // Custom Button Editor
-    class ButtonEditor extends DefaultCellEditor {
-        protected JButton button;
-        private String label;
-        private boolean isPushed;
-        private DefaultTableModel model;
-        private JTable table;
-        private int row;
-
-        public ButtonEditor(JCheckBox checkBox, DefaultTableModel model) {
-            super(checkBox);
-            this.model = model;
-            button = new JButton();
-            button.setOpaque(true);
-            button.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    fireEditingStopped();
-                }
-            });
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            this.table = table;
-            this.row = row;
-            label = (value == null) ? "Remove" : value.toString();
-            button.setText(label);
-            isPushed = true;
-            return button;
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-            if (isPushed) {
-                if (model.getRowCount() > 0 && row >= 0 && row < model.getRowCount()) {
-                    int cartId = (int) model.getValueAt(row, 0);
-                    removeFromCart(cartId);
-                    refreshCart(model);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Invalid row selected or no items in the cart.");
-                }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Cart();
             }
-            isPushed = false;
-            return label;
-        }
-
-        @Override
-        public boolean stopCellEditing() {
-            isPushed = false;
-            return super.stopCellEditing();
-        }
-
-        @Override
-        protected void fireEditingStopped() {
-            super.fireEditingStopped();
-        }
+        });
     }
 }
