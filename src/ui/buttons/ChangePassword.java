@@ -12,7 +12,7 @@ public class ChangePassword {
         //Opening window
         JFrame ui = new JFrame("Change Password");
         ui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ui.setSize(300, 250);
+        ui.setSize(800, 600);
 
         //Container for the JFrame
         JPanel panel = new JPanel();

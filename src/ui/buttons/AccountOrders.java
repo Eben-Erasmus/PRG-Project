@@ -7,7 +7,7 @@ public class AccountOrders {
         //Opening window
         JFrame ui = new JFrame("My GUI");
         ui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ui.setSize(300, 200);
+        ui.setSize(800, 600);
 
         //Container for the Jframe
         JPanel panel = new JPanel();

@@ -1,6 +1,7 @@
 package ui;
 
 import ui.buttons.Account;
+import ui.buttons.Cart;
 import ui.buttons.Settings;
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -52,7 +53,9 @@ public class UI
 
         JButton cartButton = new JButton("Cart");
         cartButton.setBounds(555, 10, 120, 25);
-        cartButton.addActionListener(e -> System.out.println("Cart"));
+        cartButton.addActionListener(e -> {
+            new Cart();
+        });
         panel.add(cartButton);
 
         searchBar.addKeyListener(new KeyAdapter()
