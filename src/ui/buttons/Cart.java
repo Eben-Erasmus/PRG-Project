@@ -12,7 +12,6 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 public class Cart {
-
     // Database connection
     private Connection connect() {
         String url = "jdbc:mysql://windhoek.erasmus.na:3306/ecommerce_database";
@@ -87,6 +86,93 @@ public class Cart {
         }
     }
 
+    // Insert order details into the database
+    private void insertOrder(String cardNumber, String expDate, String cvv, String address, float total) {
+        String insertQuery = "INSERT INTO orders (card_number, expire_date, cvv, address, total_price) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, cardNumber); // Changed to setString for VARCHAR
+            pstmt.setString(2, expDate);
+            pstmt.setString(3, cvv);
+            pstmt.setString(4, address);
+            pstmt.setFloat(5, total);
+            pstmt.executeUpdate();
+
+            ResultSet generatedKeys = pstmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int orderId = generatedKeys.getInt(1);
+                insertOrderItems(orderId); // Save individual items to the orders table
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error inserting order: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // Insert order items associated with the order
+    private void insertOrderItems(int orderId) {
+        List<Object[]> items = fetchCartItems();
+        String insertItemsQuery = "INSERT INTO orders (order_id, item_name, quantity, description) VALUES (?, ?, ?, ?)";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(insertItemsQuery)) {
+            for (Object[] item : items) {
+                pstmt.setInt(1, orderId);
+                pstmt.setString(2, (String) item[1]); // item_name
+                pstmt.setInt(3, (int) item[2]); // quantity
+                pstmt.setString(4, (String) item[3]); // description
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error inserting order items: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // Checkout items in the cart
+    private void checkout() {
+        List<Object[]> items = fetchCartItems();
+        if (items.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Your cart is empty. Cannot proceed to checkout.");
+            return;
+        }
+
+        // Calculate total amount
+        float total = 0;
+        for (Object[] item : items) {
+            total += (float) item[4] * (int) item[2]; // price * quantity
+        }
+
+        // Show card details and delivery address dialog
+        JPanel checkoutPanel = new JPanel(new GridLayout(0, 1));
+
+        JTextField cardNumberField = new JTextField();
+        JTextField expDateField = new JTextField();
+        JTextField cvvField = new JTextField();
+        JTextField addressField = new JTextField();
+
+        checkoutPanel.add(new JLabel("Card Number:"));
+        checkoutPanel.add(cardNumberField);
+        checkoutPanel.add(new JLabel("Expiration Date (MM/YY):"));
+        checkoutPanel.add(expDateField);
+        checkoutPanel.add(new JLabel("CVV:"));
+        checkoutPanel.add(cvvField);
+        checkoutPanel.add(new JLabel("Delivery Address:"));
+        checkoutPanel.add(addressField);
+
+        int option = JOptionPane.showConfirmDialog(null, checkoutPanel, "Enter Card Details and Delivery Address", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            String cardNumber = cardNumberField.getText();
+            String expDate = expDateField.getText();
+            String cvv = cvvField.getText();
+            String address = addressField.getText();
+
+            // Insert order into the database
+            insertOrder(cardNumber, expDate, cvv, address, total);
+            JOptionPane.showMessageDialog(null, "Total amount due: $" + total + "\nPurchase confirmed!\nDelivery Address: " + address);
+        }
+    }
+
     // Refresh the cart
     private void refreshCart(DefaultTableModel model) {
         List<Object[]> updatedItems = fetchCartItems();
@@ -143,7 +229,19 @@ public class Cart {
             }
         });
 
-        panel.add(refreshButton, BorderLayout.SOUTH);
+        JButton checkoutButton = new JButton("Checkout");
+        checkoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                checkout();
+            }
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(refreshButton);
+        buttonPanel.add(checkoutButton);
+
+        panel.add(buttonPanel, BorderLayout.SOUTH);
         frame.add(panel);
         frame.setVisible(true);
     }

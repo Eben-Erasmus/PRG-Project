@@ -42,7 +42,7 @@ public class UI
         accountButton.setBounds(305, 10, 120, 25);
         accountButton.addActionListener(e ->
         {System.out.println("ui.buttons.Account");
-            new Account();
+            new Account(username);
         });
         panel.add(accountButton);
 

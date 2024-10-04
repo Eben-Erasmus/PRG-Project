@@ -5,8 +5,7 @@ import java.awt.*;
 import java.sql.*;
 
 public class Account {
-    public Account() {
-        String username = "Thunder075";
+    public Account(String username) {
 
         //Opening window
         JFrame ui = new JFrame("My GUI");
