@@ -116,7 +116,7 @@ public class UI
                 String productName = rs.getString("product_name");
                 String description = rs.getString("description");
                 float price = rs.getFloat("price");
-                byte[] imgBytes = rs.getBytes("photo");
+                byte[] imgBytes = rs.getBytes("photo");  // Get image bytes from the database
 
                 JPanel productPanel = new JPanel();
                 productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS)); // Vertical layout within each product
@@ -141,7 +141,7 @@ public class UI
                 addToCartButton.addActionListener(e ->
                 {
                     int quantity = (int) quantitySpinner.getValue();
-                    addToCart(productName, quantity, description, price);
+                    addToCart(productName, quantity, description, price, imgBytes);
                     System.out.println(productName + " added to cart with quantity: " + quantity);
                 });
                 productPanel.add(addToCartButton);
@@ -160,7 +160,7 @@ public class UI
         }
     }
 
-    public void addToCart(String item_name, int quantity, String description, double price)
+    public void addToCart(String item_name, int quantity, String description, double price, byte[] imgBytes)
     {
         String url = "jdbc:mysql://windhoek.erasmus.na:3306/ecommerce_database";
         String user = "intellij";
@@ -176,9 +176,14 @@ public class UI
             pstmt.setString(3, description);
             pstmt.setDouble(4, price);
 
-            File image = new File("/home/eben/Pictures/Screenshots/Screenshot from 2024-10-01 23-00-12.png");
-            FileInputStream fis = new FileInputStream(image);
-            pstmt.setBinaryStream(5, fis, (int) image.length());
+            if (imgBytes != null)
+            {
+                pstmt.setBytes(5, imgBytes);
+            }
+            else
+            {
+                pstmt.setNull(5, java.sql.Types.BLOB);
+            }
 
             pstmt.executeUpdate();
         }

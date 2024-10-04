@@ -1,6 +1,7 @@
 package ui;
 
 import ui.buttons.Account;
+import ui.buttons.AddProduct;
 import ui.buttons.Cart;
 import ui.buttons.Settings;
 import javax.swing.*;
@@ -56,6 +57,12 @@ public class AdminUI
         cartButton.setBounds(555, 10, 120, 25);
         cartButton.addActionListener(e -> {new Cart();});
         panel.add(cartButton);
+
+        JButton addProductButton = new JButton("Add Product");
+        addProductButton.setBounds(180, 50, 120, 25);
+        addProductButton.addActionListener(e -> {new AddProduct();});
+        panel.add(addProductButton);
+
 
         JPanel panelWithItems = new JPanel();
         panelWithItems.setLayout(new GridLayout(0, 2, 10, 10));
@@ -141,10 +148,18 @@ public class AdminUI
                 addToCartButton.addActionListener(e ->
                 {
                     int quantity = (int) quantitySpinner.getValue();
-                    addToCart(productName, quantity, description, price);
+                    addToCart(productName, quantity, description, price, imgBytes);
                     System.out.println(productName + " added to cart with quantity: " + quantity);
                 });
                 productPanel.add(addToCartButton);
+
+                JButton removeButton = new JButton("Remove");
+                removeButton.addActionListener(e ->
+                {
+                    removeProduct(productName);
+                    loadProducts(panelWithItems, query);
+                });
+                productPanel.add(removeButton);
 
                 panelWithItems.add(productPanel);
 
@@ -160,7 +175,31 @@ public class AdminUI
         }
     }
 
-    public void addToCart(String item_name, int quantity, String description, double price)
+    private void removeProduct(String productName)
+    {
+        String url = "jdbc:mysql://windhoek.erasmus.na:3306/ecommerce_database";
+        String user = "intellij";
+        String password = "";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            String deleteSQL = "DELETE FROM product WHERE product_name = ?";
+            PreparedStatement pstmt = conn.prepareStatement(deleteSQL);
+            pstmt.setString(1, productName);
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println(productName + " removed from database.");
+            } else {
+                System.out.println("No product found with name: " + productName);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void addToCart(String item_name, int quantity, String description, double price, byte[] imgBytes)
     {
         String url = "jdbc:mysql://windhoek.erasmus.na:3306/ecommerce_database";
         String user = "intellij";
@@ -176,9 +215,14 @@ public class AdminUI
             pstmt.setString(3, description);
             pstmt.setDouble(4, price);
 
-            File image = new File("/home/eben/Pictures/Screenshots/Screenshot from 2024-10-01 23-00-12.png");
-            FileInputStream fis = new FileInputStream(image);
-            pstmt.setBinaryStream(5, fis, (int) image.length());
+            if (imgBytes != null)
+            {
+                pstmt.setBytes(5, imgBytes); // Store the image bytes from the product
+            }
+            else
+            {
+                pstmt.setNull(5, java.sql.Types.BLOB); // In case there is no image
+            }
 
             pstmt.executeUpdate();
         }
