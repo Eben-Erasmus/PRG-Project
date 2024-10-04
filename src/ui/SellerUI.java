@@ -47,11 +47,9 @@ public class SellerUI
         );
         panel.add(accountButton);
 
-        JButton settingsButton = new JButton("ui.buttons.Settings");
+        JButton settingsButton = new JButton("Settings");
         settingsButton.setBounds(430, 10, 120, 25);
-        settingsButton.addActionListener(e -> {System.out.println("ui.buttons.Settings");
-            new Settings();
-        });
+        settingsButton.addActionListener(e -> {new Settings();});
         panel.add(settingsButton);
 
         JButton cartButton = new JButton("Cart");
