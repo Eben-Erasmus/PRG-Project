@@ -1,79 +1,71 @@
 package ui.buttons;
 
-
 import javax.swing.*;
 import java.awt.*;
 
 public class Settings {
 
-    private JFrame frame;
     private JPanel panel;
-    private JButton button1, button2, button3, button4, button5;
+    private JButton accountInformation, notifications, paymentMethod, wishlist, theme;
 
     public Settings() {
-        settingsButtons();
+
+        // Account Information Button
+        JButton accountInformation= new JButton("Account Information");
+        accountInformation.setFocusable(false);//the box around the button is removed
+        accountInformation.setBounds( 20, 200, 400, 40);
+        accountInformation.setFont(new Font("Arial", Font.PLAIN, 16));
+        accountInformation.setMargin(new Insets(10, 10, 10, 10));
+        accountInformation.addActionListener(e -> {
+            new accountInformation();
+        });
+        panel.add(accountInformation);
+
+        // Notifications Button
+        JButton notifications= new JButton("Notifications");
+        notifications.setFocusable(false);//the box around the button is removed
+        notifications.setBounds( 20, 200, 400, 40);
+        notifications.setFont(new Font("Arial", Font.PLAIN, 16));
+        notifications.setMargin(new Insets(10, 10, 10, 10));
+        notifications.addActionListener(e -> {
+            new notifications();
+        });
+        panel.add(notifications);
+
+
+        // Payment Method Button
+        JButton paymentMethod= new JButton("Account Information");
+        paymentMethod.setFocusable(false);//the box around the button is removed
+        paymentMethod.setBounds( 20, 200, 400, 40);
+        paymentMethod.setFont(new Font("Arial", Font.PLAIN, 16));
+        paymentMethod.setMargin(new Insets(10, 10, 10, 10));
+        paymentMethod.addActionListener(e -> {
+            new paymentMethod();
+        });
+        panel.add(paymentMethod);
+
+        // Wishlist Button
+        JButton wishlist= new JButton("Account Information");
+        wishlist.setFocusable(false);//the box around the button is removed
+        wishlist.setBounds( 20, 200, 400, 40);
+        wishlist.setFont(new Font("Arial", Font.PLAIN, 16));
+        wishlist.setMargin(new Insets(10, 10, 10, 10));
+        wishlist.addActionListener(e -> {
+            new wishlist();
+        });
+        panel.add(wishlist);
+
+        // Theme Button
+        JButton theme= new JButton("Account Information");
+        theme.setFocusable(false);//the box around the button is removed
+        theme.setBounds( 20, 200, 400, 40);
+        theme.setFont(new Font("Arial", Font.PLAIN, 16));
+        theme.setMargin(new Insets(10, 10, 10, 10));
+        theme.addActionListener(e -> {
+            new theme();
+        });
+        panel.add(theme);
+
     }
 
-    private void settingsButtons() {
-        frame = new JFrame();
-        frame.setTitle("Settings");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(800, 500);
-        frame.setLocationRelativeTo(null);
-        //setResizable(false); This ensures that the window cannot be resized
-        panel = new JPanel();
-        frame.add(panel, BorderLayout.CENTER);
-        frame.setLayout(new BorderLayout(10,10));
-
-        panel.setPreferredSize(new Dimension(800, 250));
-
-        button1 = new JButton("Account Information");
-        button1.setFocusable(false);//the box around the button is removed
-        button1.setIconTextGap(10);
-        button1.setFont(new Font("Arial", Font.PLAIN, 16));
-        button1.setMargin(new Insets(10, 10, 10, 10));
-        button1.setPreferredSize(new Dimension(200, 100));
-
-
-        button2 = new JButton("Notifications");
-        button2.setFocusable(false);//the box around the button is removed
-        button2.setIconTextGap(10);
-        button2.setFont(new Font("Arial", Font.PLAIN, 16));
-        button2.setMargin(new Insets(10, 10, 10, 10));
-        button2.setPreferredSize(new Dimension(200, 100));
-
-        button3 = new JButton("Payment Method");
-        button3.setFocusable(false);//the box around the button is removed
-        button3.setIconTextGap(10);
-        button3.setFont(new Font("Arial", Font.PLAIN, 16));
-        button3.setMargin(new Insets(10, 10, 10, 10));
-        button3.setPreferredSize(new Dimension(200, 100));
-
-
-        button4 = new JButton("Wishlist");
-        button4.setFocusable(false);//the box around the button is removed
-        button4.setIconTextGap(10);
-        button4.setFont(new Font("Arial", Font.PLAIN, 16));
-        button4.setMargin(new Insets(10, 10, 10, 10));
-        button4.setPreferredSize(new Dimension(200, 100));
-
-
-        button5 = new JButton("Theme");
-        button5.setFocusable(false);//the box around the button is removed
-        button5.setIconTextGap(10);
-        button5.setFont(new Font("Arial", Font.PLAIN, 16));
-        button5.setMargin(new Insets(10, 10, 10, 10));
-        button5.setPreferredSize(new Dimension(200, 100));
-
-        panel.add(button1);
-        panel.add(button2);
-        panel.add(button3);
-        panel.add(button4);
-        panel.add(button5);
-
-        frame.add(panel);
-        frame.pack();
-        frame.setVisible(true);
-    }
 }
-
