@@ -1,5 +1,6 @@
 package ui;
 
+import ui.buttons.Account;
 import ui.buttons.Cart;
 import ui.buttons.Settings;
 
@@ -39,9 +40,11 @@ public class SellerUI
         searchButton.addActionListener(e -> System.out.println("Search: " + searchBar.getText()));
         panel.add(searchButton);
 
-        JButton accountButton = new JButton("ui.buttons.Account");
+        JButton accountButton = new JButton("Account");
         accountButton.setBounds(305, 10, 120, 25);
-        accountButton.addActionListener(e -> System.out.println("ui.buttons.Account"));
+        accountButton.addActionListener(e -> {
+            new Account(username);}
+        );
         panel.add(accountButton);
 
         JButton settingsButton = new JButton("ui.buttons.Settings");
