@@ -19,20 +19,20 @@ public class Account {
 
         //Jlabel for  Account Details
         JLabel accountDetailsLabel = new JLabel();
-        accountDetailsLabel.setBounds(10, 10, 100, 25);
+        accountDetailsLabel.setBounds(10, 10, 200, 25);
         accountDetailsLabel.setText("Account Details:");
         panel.add(accountDetailsLabel);
         //Jlabel for  Account Details
 
         //Jlabel for  First Name
         JLabel first_namerLabel = new JLabel();
-        first_namerLabel.setBounds(10, 40, 80, 25);
+        first_namerLabel.setBounds(10, 40, 200, 25);
         first_namerLabel.setText("First_Name:");
         panel.add(first_namerLabel);
 
         String first_name = getFirstName(username);
         JLabel first_nameLabel = new JLabel();
-        first_nameLabel.setBounds(80, 40, 150, 25);
+        first_nameLabel.setBounds(80, 40, 200, 25);
         first_nameLabel.setText(first_name);
         panel.add(first_nameLabel);
 
@@ -42,13 +42,13 @@ public class Account {
 
         //Jlabel for Last Name
         JLabel last_namerLabel = new JLabel();
-        last_namerLabel.setBounds(10, 75, 80, 25);
+        last_namerLabel.setBounds(10, 75, 200, 25);
         last_namerLabel.setText("Last_Name:");
         panel.add(last_namerLabel);
 
         String last_name = getLastName(username);
         JLabel last_nameLabel = new JLabel();
-        last_nameLabel.setBounds(80, 75, 150, 25);
+        last_nameLabel.setBounds(80, 75, 200, 25);
         last_nameLabel.setText(last_name);
         panel.add(last_nameLabel);
 
@@ -58,13 +58,13 @@ public class Account {
 
         //Jlabel for  Email
         JLabel emailrLabel = new JLabel();
-        emailrLabel.setBounds(10, 110, 80, 25);
+        emailrLabel.setBounds(10, 110, 200, 25);
         emailrLabel.setText("Email:");
         panel.add(emailrLabel);
 
         String email = getEmail(username);
         JLabel emailLabel = new JLabel();
-        emailLabel.setBounds(80, 110, 150, 25);
+        emailLabel.setBounds(80, 110, 200, 25);
         emailLabel.setText(email);
         panel.add(emailLabel);
 
@@ -78,7 +78,7 @@ public class Account {
         ChangePassword.setBounds(10, 150, 200, 30);
         ChangePassword.addActionListener(e ->
         {
-            new ChangePassword();
+            new ChangePassword(username);
         });
         panel.add(ChangePassword);
         //ChangePassword Button
