@@ -49,7 +49,7 @@ public class UI
 
         JButton settingsButton = new JButton("Settings");
         settingsButton.setBounds(430, 10, 120, 25);
-        settingsButton.addActionListener(e -> {new Settings();});
+        settingsButton.addActionListener(e -> {new Settings(username);});
         panel.add(settingsButton);
 
         JButton cartButton = new JButton("Cart");
