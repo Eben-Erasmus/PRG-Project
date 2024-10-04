@@ -16,7 +16,7 @@ public class SignUp
     {
         JFrame frame = new JFrame("Sign Up");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 200);
+        frame.setSize(400, 400);
         frame.setLayout(new FlowLayout());
 
         JPanel panel = new JPanel();

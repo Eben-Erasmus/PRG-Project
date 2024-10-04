@@ -23,7 +23,6 @@ public class Login
         frame.setLayout(new FlowLayout());
 
         JPanel panel = new JPanel();
-        //       panel.setBounds(110, 50, 250, 150);
         panel.setPreferredSize(new Dimension(300, 200));
 
         Border blackLine = BorderFactory.createLineBorder(Color.pink);
@@ -97,16 +96,6 @@ public class Login
                 {
                     success.setText("Username does not exist");
                 }
-
-               /* if (username.equals("admin") && password.equals("admin"))
-                {
-                    new ui.UI();
-                    frame.dispose();
-                }
-                else
-                {
-                    success.setText("Login failed");
-                }*/
             }
         });
         panel.add(loginButton);
