@@ -100,8 +100,7 @@ public class Cart {
 
             ResultSet generatedKeys = pstmt.getGeneratedKeys();
             if (generatedKeys.next()) {
-                int orderId = generatedKeys.getInt(1);
-                insertOrderItems(orderId); // Save individual items to the orders table
+                insertOrderItems(); // Save individual items to the orders table
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error inserting order: " + e.getMessage());
@@ -110,16 +109,15 @@ public class Cart {
     }
 
     // Insert order items associated with the order
-    private void insertOrderItems(int orderId) {
+    private void insertOrderItems() {
         List<Object[]> items = fetchCartItems();
-        String insertItemsQuery = "INSERT INTO orders (order_id, item_name, quantity, description) VALUES (?, ?, ?, ?)";
+        String insertItemsQuery = "INSERT INTO orders (item_name, quantity, description) VALUES (?, ?, ?)";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(insertItemsQuery)) {
             for (Object[] item : items) {
-                pstmt.setInt(1, orderId);
-                pstmt.setString(2, (String) item[1]); // item_name
-                pstmt.setInt(3, (int) item[2]); // quantity
-                pstmt.setString(4, (String) item[3]); // description
+                pstmt.setString(1, (String) item[1]); // item_name
+                pstmt.setInt(2, (int) item[2]); // quantity
+                pstmt.setString(3, (String) item[3]); // description
                 pstmt.addBatch();
             }
             pstmt.executeBatch();
