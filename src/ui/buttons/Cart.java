@@ -141,6 +141,8 @@ public class Cart {
             total += (float) item[4] * (int) item[2]; // price * quantity
         }
 
+
+
         // Show card details and delivery address dialog
         JPanel checkoutPanel = new JPanel(new GridLayout(0, 1));
 
@@ -171,6 +173,8 @@ public class Cart {
         }
     }
 
+
+
     // Refresh the cart
     private void refreshCart(DefaultTableModel model) {
         List<Object[]> updatedItems = fetchCartItems();
@@ -183,6 +187,7 @@ public class Cart {
             }
         }
     }
+
 
     // Constructor
     public Cart() {
