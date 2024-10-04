@@ -1,5 +1,6 @@
 package ui;
 
+import ui.buttons.Cart;
 import ui.buttons.Settings;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ public class AdminUI
 //        super("My GUI");
         JFrame ui = new JFrame("My GUI");
         ui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ui.setSize(300, 200);
+        ui.setSize(800, 600);
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
@@ -52,7 +53,7 @@ public class AdminUI
 
         JButton cartButton = new JButton("Cart");
         cartButton.setBounds(555, 10, 120, 25);
-        cartButton.addActionListener(e -> System.out.println("Cart"));
+        cartButton.addActionListener( e -> {new Cart();});
         panel.add(cartButton);
 
         searchBar.addKeyListener(new KeyAdapter()
