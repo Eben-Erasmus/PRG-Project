@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Settings {
-    public Settings() {
+    public Settings(String username) {
 
         JFrame frame = new JFrame("Settings");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -22,7 +22,7 @@ public class Settings {
         accountInformation.setFont(new Font("Arial", Font.PLAIN, 16));
         accountInformation.setMargin(new Insets(10, 10, 10, 10));
         accountInformation.addActionListener(e -> {
-            new accountInformation();
+            new Account(username);
         });
         panel.add(accountInformation);
 
@@ -49,21 +49,11 @@ public class Settings {
         });
         panel.add(paymentMethod);
 
-        // Wishlist Button
-        JButton wishlist= new JButton("Wishlist");
-        wishlist.setFocusable(false);//the box around the button is removed
-        wishlist.setBounds( 20, 320, 400, 40);
-        wishlist.setFont(new Font("Arial", Font.PLAIN, 16));
-        wishlist.setMargin(new Insets(10, 10, 10, 10));
-        wishlist.addActionListener(e -> {
-            new wishlist();
-        });
-        panel.add(wishlist);
 
         // Theme Button
         JButton theme= new JButton("Theme");
         theme.setFocusable(false);//the box around the button is removed
-        theme.setBounds( 20, 410, 400, 40);
+        theme.setBounds( 20, 320, 400, 40);
         theme.setFont(new Font("Arial", Font.PLAIN, 16));
         theme.setMargin(new Insets(10, 10, 10, 10));
         theme.addActionListener(e -> {
