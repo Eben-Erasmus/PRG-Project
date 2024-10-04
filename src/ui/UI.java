@@ -30,7 +30,7 @@ public class UI
         userLabel.setBounds(10, 40, 165, 25);
         panel.add(userLabel);
 
-        JLabel roleLabel = new JLabel("Admin");
+        JLabel roleLabel = new JLabel("User");
         roleLabel.setBounds(10, 60, 165, 25);
         panel.add(roleLabel);
 
